@@ -79,7 +79,7 @@ public class FailoverSocket {
     public boolean isConnected() {
         return this.isConnected;
     }
-    
+
     /**
      * Disconnect, release resource
      */
@@ -149,6 +149,47 @@ public class FailoverSocket {
                     '}';
         }
 
+    }
+
+//    public String hosts = "10.1.53.39:28,10.1.53.32:22,10.1.53.38:8080,10.1.53.37:23"; // dev
+
+    private FailoverSocket setUp() {
+        FailoverSocket client = new FailoverSocket();
+        String host = "121.40.218.7:223";
+        List<Host> hosts = new java.util.ArrayList<>();
+        Host host1 = new Host();
+        host1.setIp("127.0.0.1").setPort(80);
+        hosts.add(host1);
+        client.setHosts(hosts);
+        return client;
+    }
+
+    private void testConnect() throws InterruptedException {
+        FailoverSocket client = setUp();
+        for (int i = 0; i < 100; i++) {
+            try {
+                client.connect();
+            } catch (Exception e) {
+
+            }
+            client.disconnect();
+            Thread.sleep(1000);
+        }
+    }
+
+    private void testWrite() throws IOException {
+        FailoverSocket client = setUp();
+        client.write(new byte[]{12});
+    }
+
+    public static void main(String[] args) throws Exception {
+//        String sHost = "10.1.53.39";
+//        int sPort = 22;
+        FailoverSocket client = new FailoverSocket();
+//        String host = "121.40.218.7:22";
+//        client.setHosts(client.parseHosts(host));
+        client.testConnect();
+        System.out.println("end");
     }
 
 }
